@@ -85,7 +85,9 @@ def tools_pages():
                     'Tools and books for practicing on your own: pendulums, rune sets, obsidian scrying mirrors, and books on psychic development, divination and astrology.',
                     'Tools and books for your own practice',
                     '<p>For people who want to practice between sessions: something to swing, cast or gaze into, and something to read. '
-                    'Every item ships from New York City.</p>', p_intro, feature_kinds=('pendulum', 'rune', 'scry', 'psybook'))
+                    'Every item ships from New York City.</p>', p_intro, feature_kinds=('pendulum', 'rune', 'scry', 'psybook'), feat_h='Pendulums, runes and mirrors in stock',
+                    note='Your cart stays on this site while you browse. Payment happens once, at a secure checkout run by Namaste Bookshop, which also ships the order.',
+                    search=('Find a pendulum, stone or book', 'Look up a stone, a method or an author, such as amethyst, runes or mediumship.'))
 
 def shell(pg):
     nav = ''.join(f'<a href="{h}"' + (' class="on"' if pg['path'].startswith(h) else '') + f'>{t}</a>' for h, t in NAV)
@@ -129,7 +131,7 @@ def pages():
             f'<div class="doors"><a class="door" href="/readers/"><b>In person</b><span>Sit across the table on West 14th Street.</span></a>'
             f'<a class="door alt" href="/by-phone/"><b>On the phone</b><span>Book a phone session and your reader calls you, wherever you live.</span></a></div></section>'
             f'<section class="kinds"><h2>Six kinds of readings</h2><ul>' + ''.join(f'<li><a href="/kinds-of-readings/{t[0]}/"><b>{t[2]}</b><span>{t[3]}</span></a></li>' for t in TYPES) + '</ul></section>'
-            f'<section class="practice"><h2>Practice between sessions</h2><p>Pendulums, rune stones, obsidian scrying mirrors and books on intuition, mediumship and astrology, picked for people who want to try it themselves.</p>'
+            f'<section class="practice"><h2>Practice between sessions</h2><p>Want to try it yourself? We stock pendulums, rune stones, black obsidian mirrors, and reading on mediumship, intuition and astrology.</p>'
             f'<p><a class="cta" href="/tools/">Browse tools and books</a></p></section>'
             f'<section class="honest"><h2>What a psychic reading is, and is not</h2><p>A reading can help you think through a relationship, a job or a loss with someone who listens differently. It cannot guarantee an outcome, '
             f'and it never replaces a doctor, lawyer, therapist or financial adviser. Each psychic\'s prices are on their profile before you book. <a href="/before-you-book/">More before you book</a>.</p></section>')
