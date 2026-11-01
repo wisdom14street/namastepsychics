@@ -211,7 +211,7 @@ h1,h2{font-family:'DM Serif Display',Georgia,serif;font-weight:400;line-height:1
 .nv a.on{border-bottom:2px solid var(--rose);color:#fff}
 main{max-width:1040px;margin:0 auto;padding:0 16px}
 .split{display:grid;gap:20px;padding:26px 0}@media(min-width:820px){.split{grid-template-columns:1.2fr 1fr;align-items:center}}
-.tag{text-transform:uppercase;letter-spacing:.14em;font-size:.74rem;font-weight:700;color:#a2486d;margin:0}
+.tag{text-transform:uppercase;letter-spacing:.14em;font-size:.74rem;font-weight:700;color:#8c2450;margin:0}
 .doors{display:grid;gap:12px}.door{display:block;background:#fff;border-radius:18px;padding:18px;text-decoration:none;color:var(--ink);border:2px solid var(--wine)}.door b{display:block;font:1.4rem 'DM Serif Display',serif;color:var(--wine)}
 .door.alt{background:var(--wine);color:#f6dbe3}.door.alt b{color:#fff}
 .kinds ul{list-style:none;padding:0;display:grid;gap:10px}@media(min-width:700px){.kinds ul{grid-template-columns:repeat(3,1fr)}}
