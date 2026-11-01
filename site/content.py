@@ -55,7 +55,7 @@ KINDS = {'pendulum': ('Pendulum', 'Pendulums'), 'board': ('Pendulum board or dow
 def SELECT(p, C):
     t = p['title']; ty = (p.get('product_type') or '').strip(); tl = t.lower()
     if re.search(r'wholesale|display of \d+', tl): return None
-    if ty in ('Pendulum', 'Pendulum44.95'): return 'pendulum'
+    if ty in ('Pendulum', 'Pendulum44.95') or (ty == '' and re.search(r'pendulum.*kit', tl)): return 'pendulum'
     if ty in ('Pendulum Board', 'Dowsing Rod'): return 'board'
     if ty in ('Runes', 'Rune Set') or (ty in ('Oracle Deck', 'Oracle Cards') and re.search(r'\brunes?\b', tl)): return 'rune'
     if ty in ('Scrying Mirror', 'Spirit Board') or (re.search(r'crystal ball|scrying', tl) and ty not in BK + ('Suncatchers', 'Incense Burner', 'Home Decor', 'Tarot Deck', 'Oracle Cards')): return 'scry'
