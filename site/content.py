@@ -84,8 +84,8 @@ def tools_pages():
     return MS.build(SELECT, COLLECTIONS, STYLES, KINDS, SHELVES, '/tools/', 'Pendulums, Runes, Scrying Mirrors & Psychic Books | Namaste Psychics',
                     'Tools and books for practicing on your own: pendulums, rune sets, obsidian scrying mirrors, and books on psychic development, divination and astrology.',
                     'Tools and books for your own practice',
-                    '<p>Between sessions, a lot of our clients like to practice on their own. These are the tools and books our psychics point them to: '
-                    'something to swing, cast or gaze into, and something to read.</p>', p_intro, feature_kinds=('pendulum', 'rune', 'scry', 'psybook'))
+                    '<p>For people who want to practice between sessions: something to swing, cast or gaze into, and something to read. '
+                    'Every item ships from New York City.</p>', p_intro, feature_kinds=('pendulum', 'rune', 'scry', 'psybook'))
 
 def shell(pg):
     nav = ''.join(f'<a href="{h}"' + (' class="on"' if pg['path'].startswith(h) else '') + f'>{t}</a>' for h, t in NAV)
