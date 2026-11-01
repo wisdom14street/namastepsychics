@@ -41,13 +41,57 @@ TYPES = [
   [('jennifer-shanteau', 'A certified hypnotherapist offering 75-minute hypnotherapy, including past-life and higher-self work, and a 15-minute energy cleansing.'),
    ('lu-camy', 'A clinical hypnotist; her hour-long hypnosis can focus on goals, letting go of old feelings, past lives or the inner child.')]),
 ]
-NAV = [('/kinds-of-readings/', 'Kinds of readings'), ('/readers/', 'Readers'), ('/by-phone/', 'By phone'), ('/before-you-book/', 'Before you book')]
+NAV = [('/kinds-of-readings/', 'Kinds of readings'), ('/readers/', 'Readers'), ('/by-phone/', 'By phone'), ('/tools/', 'Tools & books'), ('/before-you-book/', 'Before you book')]
+CART = True
+SHOP_PATH = '/tools/'
+import re
+import minishop as MS
+BK = ('books', 'Books', 'Book', 'Spiritual Book')
+COLLECTIONS = []
+STYLES = []
+KINDS = {'pendulum': ('Pendulum', 'Pendulums'), 'board': ('Pendulum board or dowsing rod', 'Boards & dowsing rods'), 'rune': ('Rune set', 'Runes'),
+         'scry': ('Scrying tool', 'Scrying mirrors & crystal balls'), 'psybook': ('Psychic development book', 'Psychic & mediumship books'),
+         'divbook': ('Divination book', 'Divination books'), 'astro': ('Astrology book', 'Astrology & numerology books')}
+def SELECT(p, C):
+    t = p['title']; ty = (p.get('product_type') or '').strip(); tl = t.lower()
+    if re.search(r'wholesale|display of \d+', tl): return None
+    if ty in ('Pendulum', 'Pendulum44.95'): return 'pendulum'
+    if ty in ('Pendulum Board', 'Dowsing Rod'): return 'board'
+    if ty in ('Runes', 'Rune Set') or (ty in ('Oracle Deck', 'Oracle Cards') and re.search(r'\brunes?\b', tl)): return 'rune'
+    if ty in ('Scrying Mirror', 'Spirit Board') or (re.search(r'crystal ball|scrying', tl) and ty not in BK + ('Suncatchers', 'Incense Burner', 'Home Decor', 'Tarot Deck', 'Oracle Cards')): return 'scry'
+    if ty in BK and 'tarot' not in tl:
+        if re.search(r'astrolog|horoscope|birth ?chart|zodiac|\bplanets?\b|numerolog|sun signs?|moon signs?|natal|\bvedic|jyotish|\btransits?\b', tl): return 'astro'
+        if re.search(r'pendulum|dowsing|\brunes?\b|i ching|palmistry|palm reading|tea leaf|tasseography|scrying|crystal ball|divination|\boracle\b|lenormand|dream (dictionary|symbol|interpret|meaning)', tl): return 'divbook'
+        if re.search(r'psychic|medium(ship)?\b|clairvoy|clairaud|claircog|intuiti|empath|spirit guides?|afterlife|channel(ing|led)?\b|\baura|sixth sense|third eye|precognit|telepath|akashic|past lives?|spirit communication', tl): return 'psybook'
+    return None
+SHELVES = [('pendulums', '/tools/pendulums/', ('pendulum', 'board'), 'Pendulums', 'Pendulums and Pendulum Boards',
+            'Crystal, metal and wood pendulums for yes-or-no questions, plus printed boards to swing them over and copper rods for dowsing.'),
+           ('runes-and-scrying', '/tools/runes-and-scrying/', ('rune', 'scry'), 'Runes & scrying', 'Runes, Scrying Mirrors and Crystal Balls',
+            'Stone rune sets and rune card decks for casting, black obsidian mirrors and crystal balls for gazing, and a spirit board.'),
+           ('psychic-books', '/tools/psychic-development-books/', ('psybook',), 'Psychic & mediumship books', 'Books on Psychic Development and Mediumship',
+            'Books for building your own intuition: clairvoyance, mediumship, auras, spirit guides, empaths and the Akashic records.'),
+           ('divination-books', '/tools/divination-books/', ('divbook',), 'Divination books', 'Books on Pendulums, Runes and Other Divination',
+            'How-to books for the methods beyond tarot: pendulums, runes, the I Ching, palmistry, tea leaves, crystal balls and dream symbols.'),
+           ('astrology-books', '/tools/astrology-books/', ('astro',), 'Astrology & numerology', 'Astrology and Numerology Books',
+            'Birth charts, transits, Vedic astrology and numerology, from first guides to the references our astrologers reach for.')]
+def p_intro(x):
+    k = x['kind']
+    if k in ('pendulum', 'board'): return '<p class="pnote">New to pendulums? Hold the chain still, ask it to show you "yes", then "no", and note the swing before asking a real question.</p>'
+    if k == 'astro': return '<p class="pnote">Want a chart read for you? Our <a href="/kinds-of-readings/astrology/">astrologers</a> take bookings in person and by phone.</p>'
+    if k == 'psybook': return '<p class="pnote">Curious how a working reader does it? Book a session with one of our <a href="/readers/">psychics and mediums</a>.</p>'
+    return '<p class="pnote">Each method has its own rules. If you would like to see one in use first, ask a reader during a <a href="/readers/">session</a>.</p>'
+def tools_pages():
+    return MS.build(SELECT, COLLECTIONS, STYLES, KINDS, SHELVES, '/tools/', 'Pendulums, Runes, Scrying Mirrors & Psychic Books | Namaste Psychics',
+                    'Tools and books for practicing on your own: pendulums, rune sets, obsidian scrying mirrors, and books on psychic development, divination and astrology.',
+                    'Tools and books for your own practice',
+                    '<p>Between sessions, a lot of our clients like to practice on their own. These are the tools and books our psychics point them to: '
+                    'something to swing, cast or gaze into, and something to read.</p>', p_intro, feature_kinds=('pendulum', 'rune', 'scry', 'psybook'))
 
 def shell(pg):
     nav = ''.join(f'<a href="{h}"' + (' class="on"' if pg['path'].startswith(h) else '') + f'>{t}</a>' for h, t in NAV)
     return (f'<body><a class="skip" href="#main">Skip to content</a><header class="hd"><a class="logo" href="/"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2"/>'
             f'<path d="M6 20c5-7 23-7 28 0-5 7-23 7-28 0z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="4.5" fill="#e8a0b4"/></svg>Namaste Psychics</a>'
-            f'<a class="call" href="tel:{G.TEL}">{G.PHONE}</a><nav class="nv" aria-label="Main">{nav}</nav></header>'
+            f'<span class="hr"><a class="call" href="tel:{G.TEL}">{G.PHONE}</a>{G.cart_button()}</span><nav class="nv" aria-label="Main">{nav}</nav></header>'
             f'<main id="main">{pg["body"]}</main>'
             f'<footer class="fo"><div><p class="logo2">Namaste Psychics</p><p>Psychic readings in person on West 14th Street, or by phone.</p></div>'
             f'<div><p>Sessions inside Namaste Bookshop, {G.ADDR}. Operated by Wealth Edge Ventures Inc.</p><p><a href="mailto:{G.EMAIL}">{G.EMAIL}</a> &middot; <a href="/about/">About</a> &middot; <a href="/privacy/">Privacy</a></p></div></footer>'
@@ -79,11 +123,14 @@ def profiles(lines):
               ld=[G.person_ld(k, f'/psychics/{k}/')], crumbs=[('Home', '/'), ('Psychics', '/readers/'), (r['name'], f'/psychics/{k}/')])
 
 def pages():
+    tools_pages()
     home = (f'<section class="split"><div><p class="tag">Namaste Psychics &middot; Manhattan</p><h1>Psychic readers you can meet in person or hear by phone</h1>'
             f'<p>Namaste Psychics is a group of psychic, intuitive and mediumship readers working just west of Union Square. Learn how each kind of reading works, meet the psychic who fits, then choose how you want to sit with them.</p></div>'
             f'<div class="doors"><a class="door" href="/readers/"><b>In person</b><span>Sit across the table on West 14th Street.</span></a>'
             f'<a class="door alt" href="/by-phone/"><b>On the phone</b><span>Book a phone session and your reader calls you, wherever you live.</span></a></div></section>'
             f'<section class="kinds"><h2>Six kinds of readings</h2><ul>' + ''.join(f'<li><a href="/kinds-of-readings/{t[0]}/"><b>{t[2]}</b><span>{t[3]}</span></a></li>' for t in TYPES) + '</ul></section>'
+            f'<section class="practice"><h2>Practice between sessions</h2><p>Pendulums, rune stones, obsidian scrying mirrors and books on intuition, mediumship and astrology, picked for people who want to try it themselves.</p>'
+            f'<p><a class="cta" href="/tools/">Browse tools and books</a></p></section>'
             f'<section class="honest"><h2>What a psychic reading is, and is not</h2><p>A reading can help you think through a relationship, a job or a loss with someone who listens differently. It cannot guarantee an outcome, '
             f'and it never replaces a doctor, lawyer, therapist or financial adviser. Each psychic\'s prices are on their profile before you book. <a href="/before-you-book/">More before you book</a>.</p></section>')
     G.add('/', 'Namaste Psychics | Psychic Readings in NYC & by Phone',
@@ -151,7 +198,8 @@ NOTFOUND = '<section class="pg"><h1>We did not see that one coming</h1><p>This p
 
 CSS = """.pf{display:grid;gap:16px;align-items:center}@media(min-width:620px){.pf{grid-template-columns:160px 1fr}}.pf img{width:160px;height:160px;border-radius:50%;object-fit:cover;border:3px solid var(--rose)}.pf h1{margin:0}
 ul.svc{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:8px}ul.svc li{background:var(--blush);border:1px solid var(--rose);border-radius:999px;padding:6px 14px}ul.svc b{color:var(--wine)}
-:root{--wine:#5a1630;--rose:#e8a0b4;--blush:#fbf3f1;--ink:#2a1a20}
+:root{--wine:#5a1630;--rose:#e8a0b4;--blush:#fbf3f1;--ink:#2a1a20;--accent:#5a1630;--onaccent:#fff;--onink:#fff;--paper:#fbf3f1;--soft:#f6e6ea;--body:'DM Sans',system-ui,sans-serif;--display:'DM Serif Display',Georgia,serif;--btnr:99px;--r:12px;--line:#e4c6cf;--muted:#6a4b56;--focus:#e8a0b4}
+.hr{display:flex;align-items:center;gap:16px}.cartbtn{position:relative;display:block;color:#fff;width:28px;height:28px}.cartbtn svg{width:26px;height:26px}.cartn{position:absolute;top:-6px;right:-9px;background:var(--rose);color:var(--wine);border-radius:99px;font:700 .7rem sans-serif;padding:2px 6px}
 *{box-sizing:border-box}body{margin:0;background:var(--blush);color:var(--ink);font:16px/1.65 'DM Sans',system-ui,sans-serif;padding-bottom:58px}a{color:#8c2450}
 h1,h2{font-family:'DM Serif Display',Georgia,serif;font-weight:400;line-height:1.15;color:var(--wine)}h1{font-size:clamp(2rem,7vw,3rem);margin:.2em 0 .3em}
 .skip{position:absolute;left:-999px}.skip:focus{left:6px;top:6px;background:#fff;padding:6px}
@@ -166,6 +214,7 @@ main{max-width:1040px;margin:0 auto;padding:0 16px}
 .door.alt{background:var(--wine);color:#f6dbe3}.door.alt b{color:#fff}
 .kinds ul{list-style:none;padding:0;display:grid;gap:10px}@media(min-width:700px){.kinds ul{grid-template-columns:repeat(3,1fr)}}
 .kinds a{display:block;background:#fff;border-radius:14px;padding:14px;text-decoration:none;color:var(--ink);height:100%;border-bottom:4px solid var(--rose)}.kinds b{display:block;color:var(--wine);font-size:1.05rem}
+.practice{background:var(--wine);color:#f6dbe3;border-radius:18px;padding:6px 20px 18px;margin:26px 0}.practice h2{color:#fff}.practice .cta{background:var(--rose);color:var(--wine)}
 .honest{background:#fff;border-left:6px solid var(--wine);padding:6px 18px 14px;border-radius:0 14px 14px 0;margin:26px 0}
 .pg{max-width:780px;padding:18px 0 30px}.lead{font-size:1.12rem}.kt{border-bottom:1px solid #ecd6dc;padding:4px 0 10px}.who{color:#7a5562;font-size:.9rem}
 .people{list-style:none;padding:0;display:grid;gap:10px}.pr{display:flex;gap:12px;background:#fff;border-radius:14px;padding:12px}.pr img{border-radius:12px;object-fit:cover;flex:none}
