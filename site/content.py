@@ -55,7 +55,7 @@ def shell(pg):
 
 def person(k, line):
     r = R[k]
-    return (f'<li class="pr"><img src="{E(G.img(r["img"], 200))}" alt="{E(r["name"])}" width="72" height="72" loading="lazy"><div><b>{E(r["name"])}</b><span>{E(line)}</span>'
+    return (f'<li class="pr"><img src="{E(G.headshot(k, 200))}" alt="{E(r["name"])}" width="72" height="72" loading="lazy"><div><b>{E(r["name"])}</b><span>{E(line)}</span>'
             f'<span class="fr">from ${r["from"]}' + (' &middot; phone sessions' if r['phone'] else '') + f'</span><a href="/psychics/{k}/">Profile and booking</a></div></li>')
 
 def profiles(lines):
@@ -68,7 +68,7 @@ def profiles(lines):
         r = R[k]; first = r['name'].split()[0]
         where = {'upstairs': 'Sees clients in a private room at 80 Fifth Avenue, Suite 1104.', 'bookshop': f'Reads at a table inside Namaste Bookshop, {G.ADDR}.',
                  'remote': 'Reads remotely at the moment.', 'both': 'Splits the week between the Suite 1104 rooms and the 14th Street tables.'}[r['home']]
-        body = (f'<section class="pg"><p class="tag">Psychic profile</p><div class="pf"><img src="{E(G.img(r["img"], 400))}" alt="{E(r["name"])}" width="160" height="160">'
+        body = (f'<section class="pg"><p class="tag">Psychic profile</p><div class="pf"><img src="{E(G.headshot(k, 400))}" alt="{E(r["name"])}" width="160" height="160">'
                 f'<div><h1>{E(r["name"])}</h1><p class="lead">{E(lines[k])}</p><p class="who">' + ' &middot; '.join(f'<a href="/kinds-of-readings/{s}/">{n}</a>' for s, n in ks) + '</p></div></div>'
                 f'<h2>Where</h2><p>{where}' + (' Also reads by phone; see <a href="/by-phone/">phone sessions</a>.' if r['phone'] else '') + '</p>'
                 f'<h2>What a session costs</h2>{G.services_list(k, "chips")}'
@@ -119,7 +119,7 @@ def pages():
           ('Who calls whom?', 'The reader calls the number on your booking at the appointment time.'),
           ('What about video?', 'Remote readings are booked as phone sessions right now. If you would prefer video, ring ' + G.PHONE + ' to ask about it.'),
           ('Can I change the time?', 'The booking page asks for at least six hours\' notice to cancel or reschedule.')]
-    ph = (f'<section class="pg"><h1>Psychic readings by phone</h1><p class="lead">Living outside the city is no barrier to one of our psychics. Book a phone session, pay ahead, and your reader rings you at the time you picked.</p>'
+    ph = (f'<section class="pg"><h1>Psychic readings by phone</h1><p class="lead">You don\'t need to live in New York to sit with one of our psychics. Book a phone session, pay ahead, and your reader rings you at the time you picked.</p>'
           f'<ol class="steps"><li><b>Choose a reader</b> below.</li><li><b>Pick "Phone Session"</b> and a length: 15, 30, 45 or 60 minutes (not every reader offers every length).</li>'
           f'<li><b>Pay when you book.</b> Times show in your own time zone.</li><li><b>Pick up when they call.</b> A quiet room and a charged phone help.</li></ol>'
           f'<h2>Readers taking phone bookings</h2><ul class="people">' + ''.join(person(k, lines.get(k, 'Takes calls as well as in-shop sittings.')) for k in phone_people) + '</ul>'
@@ -133,7 +133,7 @@ def pages():
           ('What if something feels off?', 'You can end a session whenever you like. If you have a concern about a session afterward, write to ' + G.EMAIL + '.'),
           ('Are readings medical or legal advice?', 'No. A reading is for reflection and perspective. Health, legal, money and mental-health decisions belong with qualified professionals.')]
     bb = ('<section class="pg"><h1>Before you book a psychic reading</h1><p class="lead">A few honest notes so the session feels worth it.</p><dl class="faq">'
-          + ''.join(f'<dt>{q}</dt><dd>{a}</dd>' for q, a in bq) + f'</dl><h2>Prices</h2><p>Most of our psychics start around $35 for fifteen minutes. Some specialists charge more; for example, one-hour astrology sessions can run several hundred dollars. '
+          + ''.join(f'<dt>{q}</dt><dd>{a}</dd>' for q, a in bq) + f'</dl><h2>Prices</h2><p>Most of our psychics charge $35 for 15 minutes. Some specialists charge more; a 1-hour astrology chart session, for example, can cost up to about $270. '
           f'Your total appears on the booking screen before any payment.</p><p><a class="cta" href="/readers/">See psychics and prices</a></p></section>')
     G.add('/before-you-book/', 'Before You Book a Psychic Reading: Honest Answers | Namaste Psychics',
           'How to choose a psychic reader, what to bring, typical prices with Namaste Psychics, and what a psychic reading cannot do.', bb,
