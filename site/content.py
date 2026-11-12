@@ -3,6 +3,9 @@ import json, os
 import engine as G
 E = G.E
 NB_BOOK = G.BOOK + '?utm_source=' + G.DOMAIN + '&utm_medium=referral&utm_campaign=sister_site'  # Namaste Bookshop booking page, tagged per sister site
+
+def NB(path):  # Namaste Bookshop guide page, tagged per sister site
+    return 'https://namastebookshop.com/pages/' + path + '?utm_source=' + G.DOMAIN + '&utm_medium=referral&utm_campaign=sister_site'
 BUSINESS_TYPE = 'LocalBusiness'
 THEME_COLOR = '#5a1630'
 FONTS = 'https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;600;700&display=swap'
@@ -144,10 +147,12 @@ def pages():
     G.add('/kinds-of-readings/', 'Types of Psychic Readings Explained | Namaste Psychics',
           'Clairvoyant, clairaudient, mediumship, astrology, oracle and Lenormand readings, plus hypnosis and energy work: how each works and which of our psychics offer it.', idx,
           crumbs=[('Home', '/'), ('Kinds of readings', '/kinds-of-readings/')])
+    GUIDE = {'mediumship': f'<p>Namaste Bookshop’s guide to <a href="{E(NB("medium-reading-nyc"))}">mediumship readings in NYC</a> covers how a sitting works and how to prepare.</p>',
+             'astrology': f'<p>Bring your birth date, time and place. The bookshop’s <a href="{E(NB("astrology-birth-chart-reading-nyc"))}">astrology and birth chart guide</a> compares its astrologers.</p>'}
     for slug, title, short, one, para, people in TYPES:
         body = (f'<section class="pg"><p class="tag">Kinds of readings</p><h1>{title} with Namaste Psychics</h1><p class="lead">{one}</p><p>{para}</p>'
                 f'<h2>Who offers it</h2><ul class="people">' + ''.join(person(k, l) for k, l in people) + '</ul>'
-                f'<p class="note">Open a profile to see prices; its booking button shows live open times.</p><p><a class="cta" href="{E(NB_BOOK)}">Book a {E(short.lower())} session</a></p><p><a href="/kinds-of-readings/">All kinds of readings</a></p></section>')
+                f'<p class="note">Open a profile to see prices; its booking button shows live open times.</p><p><a class="cta" href="{E(NB_BOOK)}">Book a {E(short.lower())} session</a></p>' + GUIDE.get(slug, '') + '<p><a href="/kinds-of-readings/">All kinds of readings</a></p></section>')
         G.add(f'/kinds-of-readings/{slug}/', f'{title} in NYC | Namaste Psychics',
               f'{one} Learn how {short.lower()} sessions work and see which of our psychics offer them.', body,
               crumbs=[('Home', '/'), ('Kinds of readings', '/kinds-of-readings/'), (title, f'/kinds-of-readings/{slug}/')])
