@@ -2,6 +2,7 @@
 import json, os
 import engine as G
 E = G.E
+NB_BOOK = G.BOOK + '?utm_source=' + G.DOMAIN + '&utm_medium=referral&utm_campaign=sister_site'  # Namaste Bookshop booking page, tagged per sister site
 BUSINESS_TYPE = 'LocalBusiness'
 THEME_COLOR = '#5a1630'
 FONTS = 'https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;600;700&display=swap'
@@ -93,7 +94,7 @@ def shell(pg):
     nav = ''.join(f'<a href="{h}"' + (' class="on"' if pg['path'].startswith(h) else '') + f'>{t}</a>' for h, t in NAV)
     return (f'<body><a class="skip" href="#main">Skip to content</a><header class="hd"><a class="logo" href="/"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2"/>'
             f'<path d="M6 20c5-7 23-7 28 0-5 7-23 7-28 0z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="4.5" fill="#e8a0b4"/></svg>Namaste Psychics</a>'
-            f'<span class="hr"><a class="call" href="tel:{G.TEL}">{G.PHONE}</a>{G.cart_button()}</span><nav class="nv" aria-label="Main">{nav}</nav></header>'
+            f'<span class="hr"><a class="hbook" href="{E(NB_BOOK)}">Book a reading</a><a class="call" href="tel:{G.TEL}">{G.PHONE}</a>{G.cart_button()}</span><nav class="nv" aria-label="Main">{nav}</nav></header>'
             f'<main id="main">{pg["body"]}</main>'
             f'<footer class="fo"><div><p class="logo2">Namaste Psychics</p><p>Psychic readings in person on West 14th Street, or by phone.</p></div>'
             f'<div><p>Sessions inside Namaste Bookshop, {G.ADDR}. Operated by Wealth Edge Ventures Inc.</p><p><a href="mailto:{G.EMAIL}">{G.EMAIL}</a> &middot; <a href="/about/">About</a> &middot; <a href="/privacy/">Privacy</a></p></div></footer>'
@@ -127,7 +128,7 @@ def profiles(lines):
 def pages():
     tools_pages()
     home = (f'<section class="split"><div><p class="tag">Namaste Psychics &middot; Manhattan</p><h1>Psychic readers you can meet in person or hear by phone</h1>'
-            f'<p>Namaste Psychics is a group of psychic, intuitive and mediumship readers working just west of Union Square. Learn how each kind of reading works, meet the psychic who fits, then choose how you want to sit with them.</p></div>'
+            f'<p>Namaste Psychics is a group of psychic, intuitive and mediumship readers working just west of Union Square. Learn how each kind of reading works, meet the psychic who fits, then choose how you want to sit with them.</p><p><a class="cta" href="{E(NB_BOOK)}">Book a reading</a></p></div>'
             f'<div class="doors"><a class="door" href="/readers/"><b>In person</b><span>Sit across the table on West 14th Street.</span></a>'
             f'<a class="door alt" href="/by-phone/"><b>On the phone</b><span>Book a phone session and your reader calls you, wherever you live.</span></a></div></section>'
             f'<section class="kinds"><h2>Six kinds of readings</h2><ul>' + ''.join(f'<li><a href="/kinds-of-readings/{t[0]}/"><b>{t[2]}</b><span>{t[3]}</span></a></li>' for t in TYPES) + '</ul></section>'
@@ -138,7 +139,7 @@ def pages():
     G.add('/', 'Namaste Psychics | Psychic Readings in NYC & by Phone',
           'Namaste Psychics: clairvoyant, clairaudient, mediumship and astrology readings in Manhattan, or by phone from anywhere. Meet each psychic and reserve online.', home,
           ld=[G.shop_ld()])
-    idx = ('<section class="pg"><h1>Kinds of psychic readings</h1><p class="lead">Readers do not all work the same way. Some see, some hear, some read a chart. Knowing the difference makes it easier to pick someone.</p>'
+    idx = ('<section class="pg"><h1>Kinds of psychic readings</h1><p class="lead">Readers do not all work the same way. Some see, some hear, some read a chart. Knowing the difference makes it easier to pick someone.</p><p><a class="cta" href="' + E(NB_BOOK) + '">Book a reading</a></p>'
            + ''.join(f'<article class="kt"><h2><a href="/kinds-of-readings/{t[0]}/">{t[1]}</a></h2><p>{t[3]}</p><p class="who">' + ', '.join(R[k]["name"] for k, _ in t[5]) + '</p></article>' for t in TYPES) + '</section>')
     G.add('/kinds-of-readings/', 'Types of Psychic Readings Explained | Namaste Psychics',
           'Clairvoyant, clairaudient, mediumship, astrology, oracle and Lenormand readings, plus hypnosis and energy work: how each works and which of our psychics offer it.', idx,
@@ -146,7 +147,7 @@ def pages():
     for slug, title, short, one, para, people in TYPES:
         body = (f'<section class="pg"><p class="tag">Kinds of readings</p><h1>{title} with Namaste Psychics</h1><p class="lead">{one}</p><p>{para}</p>'
                 f'<h2>Who offers it</h2><ul class="people">' + ''.join(person(k, l) for k, l in people) + '</ul>'
-                f'<p class="note">Open a profile to see prices; its booking button shows live open times.</p><p><a href="/kinds-of-readings/">All kinds of readings</a></p></section>')
+                f'<p class="note">Open a profile to see prices; its booking button shows live open times.</p><p><a class="cta" href="{E(NB_BOOK)}">Book a {E(short.lower())} session</a></p><p><a href="/kinds-of-readings/">All kinds of readings</a></p></section>')
         G.add(f'/kinds-of-readings/{slug}/', f'{title} in NYC | Namaste Psychics',
               f'{one} Learn how {short.lower()} sessions work and see which of our psychics offer them.', body,
               crumbs=[('Home', '/'), ('Kinds of readings', '/kinds-of-readings/'), (title, f'/kinds-of-readings/{slug}/')])
@@ -183,7 +184,7 @@ def pages():
           ('Are readings medical or legal advice?', 'No. A reading is for reflection and perspective. Health, legal, money and mental-health decisions belong with qualified professionals.')]
     bb = ('<section class="pg"><h1>Before you book a psychic reading</h1><p class="lead">A few honest notes so the session feels worth it.</p><dl class="faq">'
           + ''.join(f'<dt>{q}</dt><dd>{a}</dd>' for q, a in bq) + f'</dl><h2>Prices</h2><p>Most of our psychics charge $35 for 15 minutes. Some specialists charge more; a 1-hour astrology chart session, for example, can cost up to about $270. '
-          f'Your total appears on the booking screen before any payment.</p><p><a class="cta" href="/readers/">See psychics and prices</a></p></section>')
+          f'Your total appears on the booking screen before any payment.</p><p><a class="cta" href="{E(NB_BOOK)}">Book a reading</a> <a href="/readers/">See psychics and prices</a></p></section>')
     G.add('/before-you-book/', 'Before You Book a Psychic Reading: Honest Answers | Namaste Psychics',
           'How to choose a psychic reader, what to bring, typical prices with Namaste Psychics, and what a psychic reading cannot do.', bb,
           ld=[G.faq_ld(bq)], crumbs=[('Home', '/'), ('Before you book', '/before-you-book/')])
@@ -207,7 +208,7 @@ h1,h2{font-family:'DM Serif Display',Georgia,serif;font-weight:400;line-height:1
 .skip{position:absolute;left:-999px}.skip:focus{left:6px;top:6px;background:#fff;padding:6px}
 .hd{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:12px 16px 0;background:var(--wine);color:#fff}
 .logo{display:flex;align-items:center;gap:8px;color:#fff;text-decoration:none;font:1.35rem 'DM Serif Display',serif}.logo svg{width:32px;height:32px}
-.call{color:var(--rose);font-weight:700;text-decoration:none}.nv{flex-basis:100%;display:flex;gap:18px;overflow-x:auto;padding:12px 0}.nv a{color:#f6dbe3;text-decoration:none;white-space:nowrap;font-weight:600;padding-bottom:4px}
+.call{color:var(--rose);font-weight:700;text-decoration:none}.hbook{background:var(--rose);color:var(--wine);font-weight:700;text-decoration:none;padding:6px 14px;border-radius:99px;white-space:nowrap}.nv{flex-basis:100%;display:flex;gap:18px;overflow-x:auto;padding:12px 0}.nv a{color:#f6dbe3;text-decoration:none;white-space:nowrap;font-weight:600;padding-bottom:4px}
 .nv a.on{border-bottom:2px solid var(--rose);color:#fff}
 main{max-width:1040px;margin:0 auto;padding:0 16px}
 .split{display:grid;gap:20px;padding:26px 0}@media(min-width:820px){.split{grid-template-columns:1.2fr 1fr;align-items:center}}
